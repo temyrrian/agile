@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
-import {EditionType} from '../types';
 
 @Component({
   selector: 'app-control-panel',
@@ -8,9 +7,9 @@ import {EditionType} from '../types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ControlPanelComponent {
-  @Output() editionTypeWasSelected = new EventEmitter<EditionType>();
+  @Output() editionTypeWasSelected = new EventEmitter<string>();
 
-  onTypeSelected(type: any) {
-    this.editionTypeWasSelected.emit({startTag: `<${type}>`, endTag: `</${type}>`});
+  onTypeSelected(type: string) {
+    this.editionTypeWasSelected.emit(type);
   }
 }

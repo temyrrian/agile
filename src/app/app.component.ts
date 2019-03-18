@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {EditionType} from './types';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +7,9 @@ import {EditionType} from './types';
 })
 export class AppComponent {
   title = 'Simple Text Editor';
-  editableType: EditionType;
+  editableType: string;
 
-  setEditionType(editableType: EditionType) {
-    this.editableType = { ...editableType };
+  setEditionType(editableType: string) {
+    this.editableType = editableType;
   }
 }

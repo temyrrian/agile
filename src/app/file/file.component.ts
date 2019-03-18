@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { TextService } from '../text-service/text.service';
 import {EditionType} from '../types';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-file',
@@ -23,39 +24,26 @@ import {EditionType} from '../types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileComponent implements OnInit, OnChanges {
-  text$: Promise<string>;
+  text$: Promise<SafeHtml>;
 
   @Input() editableType: EditionType;
 
   @ViewChild('textField') el: ElementRef;
 
-  @HostListener('dblclick')
-  onDblClick() {
-    console.log(this.editableType);
-
-    const textContent = this.el.nativeElement.innerHTML;
-    const startEditingIndex = this.window.getSelection().anchorOffset;
-    const endEditingIndex = this.window.getSelection().focusOffset;
-
-     const editedContent = `
-     ${textContent.slice(0, startEditingIndex)}
-     ${this.editableType.startTag}
-     ${textContent.slice(startEditingIndex, endEditingIndex)}
-     ${this.editableType.endTag}
-     ${textContent.slice(endEditingIndex, textContent.length)}
-     `;
-
-    this.textService.saveMockText(editedContent).then(() => {
-      this.el.nativeElement.innerHTML = editedContent;
-    });
-
+  @HostListener('dblclick', ['$event.target'])
+  onDblClick(element) {
+    element.classList.toggle(this.editableType);
   }
 
-  constructor(private textService: TextService, @Inject(Window) private window: Window) {
+  constructor(private textService: TextService, @Inject(Window) private window: Window, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
-    this.text$ = this.textService.getMockText();
+    this.text$ = this.textService.getMockText().then((text) => {
+      return this.sanitizer.bypassSecurityTrustHtml( text.split(' ').map((word) => {
+        return '<span class="bold">' +  word + '</span>';
+      }).join(' '));
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

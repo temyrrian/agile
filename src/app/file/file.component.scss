@@ -12,4 +12,25 @@
   background-color: #fff;
   border: 1px solid #e4dede;
   padding: 20px;
+  -webkit-user-modify: read-write;
+  -moz-user-modify: read-write;
+  user-modify: read-write;
+  span {
+    color: red;
+    .bold {
+      font-weight: 600;
+      color: red;
+    }
+  }
+
+}
+
+
+
+.italic {
+  font-style: italic;
+}
+
+.underline {
+  text-decoration: underline;
 }
